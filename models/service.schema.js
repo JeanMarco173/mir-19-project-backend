@@ -9,13 +9,14 @@ const ServiceSchema = new Schema({
   driver: { type: Schema.Types.ObjectId, ref: "Driver" },
   origin: { type: AddressSchema, required: true },
   destiny: { type: AddressSchema, required: true },
+  distance: { type: Number, required: true },
   date: { type: Date, required: true },
   hour: { type: String, required: true },
   price: { type: Number, required: false },
   isScheduled: { type: Boolean, required: true, default: false },
   detail: { type: String, required: true },
-  status: { type: String, required: true, default: "created" },
+  status: { type: String, required: true, default: "Creado" },
   points: [{ type: PointSchema, required: false }],
 });
 
-module.exports = ServiceSchema;
+module.exports = mongoose.model("Service", ServiceSchema);

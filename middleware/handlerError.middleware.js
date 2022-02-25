@@ -9,6 +9,13 @@ const handlerError = (error, req, res, next) => {
       data: {},
     });
   }
+  if (error.message === "Unauthorized") {
+    return res.status(401).json({
+      message: error.message,
+      status: "Failed",
+      data: {},
+    });
+  }
   res.status(error.code || 503).json({
     message:
       error.message || "Error de servidor. Porfavor, vuelva a intentarlo.",

@@ -10,8 +10,8 @@ const DriverSchema = new Schema({
   rating: { type: Number, required: true, default: 5 },
   avatarUrl: { type: String },
   car: { type: Schema.Types.ObjectId, ref: "Car" },
-  isActive: { type: Boolean, required: true, default: false },
-  currentPosition: { type: pointSchema, required: false },
+  isActive: { type: Boolean, required: true, default: true },
+  currentPosition: { type: pointSchema, index: "2dsphere" },
 });
 
 module.exports = mongoose.model("Driver", DriverSchema);

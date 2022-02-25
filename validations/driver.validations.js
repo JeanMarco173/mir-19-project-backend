@@ -15,4 +15,8 @@ const registerCar = [
 
 const setPositionValidations = [body("position").isArray()];
 
-module.exports = { registerValidations, registerCar, setPositionValidations };
+module.exports = {
+  registerValidations,
+  registerCar,
+  setPositionValidations,
+};

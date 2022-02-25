@@ -47,4 +47,65 @@ const updatePosition = async (driverId, position) => {
   }
 };
 
-module.exports = { register, findById, updatePosition };
+/**
+ * Servicios
+ */
+
+const findDriversNearToAddress = async (points) => {
+  try {
+    const drivers = Driver.aggregate([
+      {
+        $geoNear: {
+          near: {
+            type: "Point",
+            coordinates: points,
+          },
+          maxDistance: 2000,
+          spherical: true,
+          distanceMultiplier: 1 / 1000,
+          distanceField: "distance",
+          query: { isActive: true },
+          key: "currentPosition",
+        },
+      },
+      { $sort: { distanceField: 1 } },
+      {
+        $project: {
+          distance: 1,
+          _id: 1,
+        },
+      },
+      {
+        $lookup: {
+          from: "cars",
+          localField: "_id",
+          foreignField: "owner",
+          as: "carDetail",
+        },
+      },
+    ]);
+    if (drivers) return drivers;
+    else return [];
+  } catch (error) {
+    return [];
+  }
+};
+
+const acceptService = async (driverId) => {
+  try {
+    const currentDriver = await Driver.findById(driverId);
+    currentDriver.isActive = false;
+    const driverUpdated = await currentDriver.save();
+    return driverUpdated;
+  } catch (error) {
+    throw new ErrorModel(error, 503);
+  }
+};
+
+module.exports = {
+  register,
+  findById,
+  updatePosition,
+  findDriversNearToAddress,
+  acceptService,
+};
