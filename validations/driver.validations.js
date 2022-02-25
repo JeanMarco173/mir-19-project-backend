@@ -13,6 +13,6 @@ const registerCar = [
   body("type").isLength({ min: 3 }),
 ];
 
-const setPositionValidations = [body("position").isLength()];
+const setPositionValidations = [body("position").isArray()];
 
 module.exports = { registerValidations, registerCar, setPositionValidations };

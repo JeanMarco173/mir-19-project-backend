@@ -3,7 +3,12 @@ const jwt = require("jsonwebtoken");
 const { secret } = require("../config/index.js");
 const { validationResult } = require("express-validator");
 
-const { register, findByEmail } = require("../services/customer.service.js");
+const {
+  register,
+  findByEmail,
+  registerAddress,
+  findAddressesByCustomer,
+} = require("../services/customer.service.js");
 
 const signUpCustomer = asyncHandler(async (req, res, next) => {
   const errors = validationResult(req);
@@ -41,4 +46,45 @@ const provideAccessToken = asyncHandler(async (req, res, next) => {
   });
 });
 
-module.exports = { signUpCustomer, provideAccessToken };
+const addAddress = asyncHandler(async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    next(errors);
+  }
+  const { name, coordinates } = req.body;
+  const { customerId } = req.params;
+  const location = {
+    type: "Point",
+    coordinates: [coordinates.lat, coordinates.lng],
+  };
+  const newAddress = await registerAddress(
+    {
+      name,
+      location,
+      coordinates,
+    },
+    customerId
+  );
+  res.status(201).json({
+    message: "Se registró con éxito la dirección.",
+    status: "OK",
+    data: {},
+  });
+});
+
+const listAddressByUser = asyncHandler(async (req, res, next) => {
+  const { customerId } = req.params;
+  const customer = await findAddressesByCustomer(customerId);
+  res.status(201).json({
+    message: "Se listó con éxito las dirección.",
+    status: "OK",
+    data: { addresses: customer.addresses },
+  });
+});
+
+module.exports = {
+  signUpCustomer,
+  provideAccessToken,
+  addAddress,
+  listAddressByUser,
+};

@@ -25,4 +25,34 @@ const findByEmail = async (email) => {
   }
 };
 
-module.exports = { register, findByEmail };
+/**
+ * Direcciones
+ */
+
+const registerAddress = async (newAddress, customerId) => {
+  try {
+    const currentCustomer = await Customer.findById(customerId);
+    currentCustomer.addresses.push(newAddress);
+    const customerUpdated = currentCustomer.save();
+    return customerUpdated;
+  } catch (error) {
+    throw new ErrorModel(error, 503);
+  }
+};
+
+const findAddressesByCustomer = async (customerId) => {
+  try {
+    const customer = await Customer.findById(customerId);
+    if (customer) return customer;
+    else throw new ErrorModel("El usuario no está registrado", 403);
+  } catch (error) {
+    throw new ErrorModel(error, 503);
+  }
+};
+
+module.exports = {
+  register,
+  findByEmail,
+  registerAddress,
+  findAddressesByCustomer,
+};

@@ -1,4 +1,4 @@
-const { body } = require("express-validator");
+const { body, check } = require("express-validator");
 
 const registerValidations = [
   body("name").isLength({ min: 3 }),
@@ -8,4 +8,15 @@ const registerValidations = [
 
 const accessTokenValidations = [body("email").isEmail().normalizeEmail()];
 
-module.exports = { registerValidations, accessTokenValidations };
+const registerAddressValidations = [
+  body("name").isLength({ min: 3 }),
+  body("coordinates").isObject(),
+  check("coordinates.*.lat").notEmpty(),
+  check("coordinates.*.lng").notEmpty(),
+];
+
+module.exports = {
+  registerValidations,
+  accessTokenValidations,
+  registerAddressValidations,
+};
