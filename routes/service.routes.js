@@ -17,7 +17,13 @@ const {
   setWaiting,
   setInProcess,
   setFinish,
+  findServiceById,
 } = require("../controller/service.controller.js");
+
+/**
+ * GET
+ */
+router.get("/:serviceId", validateJWT, findServiceById);
 
 /**
  * POST

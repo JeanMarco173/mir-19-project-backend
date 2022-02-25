@@ -5,11 +5,16 @@ const {
   register,
   setDriver,
   setStatus,
+  findById,
 } = require("../services/service.service.js");
 const {
   findDriversNearToAddress,
   acceptService,
 } = require("../services/driver.service.js");
+
+/**
+ * Funciones internas
+ */
 
 const getDrivers = async (point, distance) => {
   const drivers = await findDriversNearToAddress(point);
@@ -32,12 +37,32 @@ const getDrivers = async (point, distance) => {
   });
 };
 
+const fomatAddress = async (address) => {
+  if (!address.location) {
+    const addressAux = {
+      ...address,
+      location: {
+        type: "Point",
+        coordinates: [address.coordinates.lat, address.coordinates.lng11],
+      },
+    };
+    return addressAux;
+  }
+  return address;
+};
+
+/**
+ * Funciones para exportar
+ */
+
 const signUpService = asyncHandler(async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     next(errors);
   }
-  const { customer, origin, destiny, date, hour, detail, distance } = req.body;
+  const { customer, date, hour, detail, distance } = req.body;
+  const origin = await fomatAddress(req.body.origin);
+  const destiny = await fomatAddress(req.body.destiny);
   const newService = await register({
     customer,
     origin,
@@ -52,6 +77,16 @@ const signUpService = asyncHandler(async (req, res, next) => {
     message: "El servicio fue registrado con éxito.",
     status: "OK",
     data: { service: newService, drivers },
+  });
+});
+
+const findServiceById = asyncHandler(async (req, res, next) => {
+  const { serviceId } = req.params;
+  const service = await findById(serviceId);
+  res.status(200).json({
+    message: "El servicio se listó con éxito.",
+    status: "OK",
+    data: service,
   });
 });
 
@@ -103,6 +138,7 @@ const setFinish = asyncHandler(async (req, res, next) => {
 
 module.exports = {
   signUpService,
+  findServiceById,
   setUpDriver,
   setWaiting,
   setInProcess,

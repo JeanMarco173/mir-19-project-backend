@@ -35,4 +35,39 @@ const setStatus = async (serviceId, status) => {
   }
 };
 
-module.exports = { register, setDriver, setStatus };
+const findById = async (serviceId) => {
+  try {
+    const service = await Service.findById(serviceId)
+      .select({
+        isScheduled: 0,
+        __v: 0,
+      })
+      .populate({
+        path: "driver",
+        model: "Driver",
+        select: {
+          _id: 1,
+          name: 1,
+          surName: 1,
+          type: 1,
+        },
+        populate: [
+          {
+            path: "car",
+            model: "Car",
+            select: {
+              model: 1,
+              brand: 1,
+              plate: 1,
+              type: 1,
+            },
+          },
+        ],
+      });
+    return service;
+  } catch (error) {
+    throw new ErrorModel(error, 503);
+  }
+};
+
+module.exports = { register, setDriver, setStatus, findById };

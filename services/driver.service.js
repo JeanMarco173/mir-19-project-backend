@@ -102,10 +102,22 @@ const acceptService = async (driverId) => {
   }
 };
 
+const setActive = async (driverId) => {
+  try {
+    const currentDriver = await Driver.findById(driverId);
+    currentDriver.isActive = true;
+    const driverUpdated = await currentDriver.save();
+    return driverUpdated;
+  } catch (error) {
+    throw new ErrorModel(error, 503);
+  }
+};
+
 module.exports = {
   register,
   findById,
   updatePosition,
   findDriversNearToAddress,
   acceptService,
+  setActive,
 };
