@@ -1,5 +1,4 @@
 const asyncHandler = require("../middleware/asyncHandler.middleware.js");
-const ErrorModel = require("../models/error.schema");
 const jwt = require("jsonwebtoken");
 const { secret } = require("../config/index.js");
 const { validationResult } = require("express-validator");

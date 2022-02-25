@@ -10,7 +10,8 @@ const handlerError = (error, req, res, next) => {
     });
   }
   res.status(error.code || 503).json({
-    message: error.message || "Internal error. Please, try again.",
+    message:
+      error.message || "Error de servidor. Porfavor, vuelva a intentarlo.",
     status: "Failed",
     data: {},
   });

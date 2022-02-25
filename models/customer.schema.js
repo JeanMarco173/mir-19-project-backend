@@ -7,7 +7,7 @@ const CustomerSchema = new Schema({
   name: { type: String, required: true, maxLength: 70 },
   surName: { type: String, required: true, maxLength: 70 },
   email: { type: String, required: true, maxLength: 100 },
-  avatar_url: { type: String },
+  avatarUrl: { type: String },
   rating: { type: Number, required: true, default: 5 },
   addresses: [AddressSchema],
 });
