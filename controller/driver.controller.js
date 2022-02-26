@@ -24,7 +24,7 @@ const signUpDriver = asyncHandler(async (req, res, next) => {
 const findDriverById = asyncHandler(async (req, res, next) => {
   const { driverId } = req.params;
   const driver = await findById(driverId);
-  res.status(201).json({
+  res.status(200).json({
     message: "El conductor fue listado con éxito.",
     status: "OK",
     data: driver,

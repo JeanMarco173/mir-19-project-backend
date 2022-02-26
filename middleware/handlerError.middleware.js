@@ -16,7 +16,8 @@ const handlerError = (error, req, res, next) => {
       data: {},
     });
   }
-  res.status(error.code || 503).json({
+  const code = error.code > 200 ? error.code : 503;
+  res.status(code).json({
     message:
       error.message || "Error de servidor. Porfavor, vuelva a intentarlo.",
     status: "Failed",

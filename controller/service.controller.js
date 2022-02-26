@@ -43,7 +43,7 @@ const fomatAddress = async (address) => {
       ...address,
       location: {
         type: "Point",
-        coordinates: [address.coordinates.lat, address.coordinates.lng11],
+        coordinates: [address.coordinates.lat, address.coordinates.lng],
       },
     };
     return addressAux;
