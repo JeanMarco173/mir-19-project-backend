@@ -1,4 +1,4 @@
-const { default: axios } = require("axios");
+const axios = require("axios");
 const {
   notificationsAPI,
   notificationsId,
@@ -6,15 +6,24 @@ const {
 } = require("../../config/index.js");
 
 const sendNotificationsToCustomer = async (title, message, data, type) => {
+  console.log("entro aqui");
+  const headers = {
+    "Content-Type": "application/json",
+  };
   const body = {
-    subID: "put your unique app user ID here as a string",
+    subID: data.customer,
     appId: notificationsId,
     appToken: notificationsToken,
     title,
     message,
     pushData: { service: data, type },
   };
-  await axios.post(notificationsAPI, body);
+  const res = await axios({
+    method: "post",
+    url: notificationsAPI,
+    headers,
+    data: body,
+  });
 };
 
 module.exports = { sendNotificationsToCustomer };
