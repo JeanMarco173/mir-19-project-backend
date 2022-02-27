@@ -1,5 +1,8 @@
 const asyncHandler = require("../middleware/asyncHandler.middleware.js");
 const { validationResult } = require("express-validator");
+const {
+  sendNotificationsToCustomer,
+} = require("../utils/notifications/index.js");
 
 const {
   register,
@@ -11,6 +14,13 @@ const {
   findDriversNearToAddress,
   acceptService,
 } = require("../services/driver.service.js");
+
+/**
+ * Constante para notificaciones
+ */
+
+const title = "HouseMove 🚚";
+const notificationType = "service";
 
 /**
  * Funciones internas
@@ -111,6 +121,12 @@ const setWaiting = asyncHandler(async (req, res, next) => {
   const { serviceId } = req.params;
   const serviceUpdated = await setStatus(serviceId, "Esperando");
   const service = await findById(serviceId);
+  await sendNotificationsToCustomer(
+    title,
+    "El driver ha llegado",
+    service,
+    notificationType
+  );
   res.status(200).json({
     message: "El driver ha llegado.",
     status: "OK",
@@ -121,8 +137,15 @@ const setWaiting = asyncHandler(async (req, res, next) => {
 const setInProcess = asyncHandler(async (req, res, next) => {
   const { serviceId } = req.params;
   const serviceUpdated = await setStatus(serviceId, "En proceso");
+  const service = await findById(serviceId);
+  await sendNotificationsToCustomer(
+    title,
+    "Su viaje a comenzado",
+    service,
+    notificationType
+  );
   res.status(200).json({
-    message: "El viaje a comenzado.",
+    message: "El viaje ha comenzado.",
     status: "OK",
     data: { service: serviceUpdated },
   });
@@ -131,6 +154,13 @@ const setInProcess = asyncHandler(async (req, res, next) => {
 const setFinish = asyncHandler(async (req, res, next) => {
   const { serviceId } = req.params;
   const serviceUpdated = await setStatus(serviceId, "Finalizado");
+  const service = await findById(serviceId);
+  await sendNotificationsToCustomer(
+    title,
+    "Su viaje ha finalizado",
+    service,
+    notificationType
+  );
   res.status(200).json({
     message: "El viaje a terminado.",
     status: "OK",
