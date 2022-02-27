@@ -99,20 +99,22 @@ const setUpDriver = asyncHandler(async (req, res, next) => {
   const { serviceId } = req.params;
   const driverUpdated = await acceptService(driver);
   const serviceUpdated = await setDriver(serviceId, driver, price);
+  const service = await findById(serviceId);
   res.status(200).json({
     message: "El driver está en camino.",
     status: "OK",
-    data: { service: serviceUpdated },
+    data: { service },
   });
 });
 
 const setWaiting = asyncHandler(async (req, res, next) => {
   const { serviceId } = req.params;
   const serviceUpdated = await setStatus(serviceId, "Esperando");
+  const service = await findById(serviceId);
   res.status(200).json({
     message: "El driver ha llegado.",
     status: "OK",
-    data: { service: serviceUpdated },
+    data: { service },
   });
 });
 
