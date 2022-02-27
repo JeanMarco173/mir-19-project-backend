@@ -22,12 +22,7 @@ const {
 /**
  * GET
  */
-router.get(
-  "/:customerId/address",
-  validateJWT,
-  registerAddressValidations,
-  listAddressByUser
-);
+router.get("/:customerId/address", validateJWT, listAddressByUser);
 
 /**
  * POST
